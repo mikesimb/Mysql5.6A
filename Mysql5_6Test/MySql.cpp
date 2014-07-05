@@ -167,6 +167,8 @@ bool CMySql::selectDB(char * dbname)
 
 bool CMySql::getTableName()
 {
+	 //在这里获取的表名字没有办法知道他是试图还是表，所以需要做表状态检查。
+	//同事可以用SQL语句来实现相关的功能  show tables from dbname
 	if (m_mysql)
 	{
 		//m_db_namelist.clear();
@@ -179,6 +181,7 @@ bool CMySql::getTableName()
 		{
 			for (ULONG i = 0; i < colLen; i++)
 			{
+				//这里知道了表名字，那么也就可以做表明检查
 				string name = row[i] ? row[i] : "NULL";
 				m_db_namelist.push_back(name);
 			}
