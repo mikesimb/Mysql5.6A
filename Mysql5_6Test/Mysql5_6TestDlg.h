@@ -43,4 +43,5 @@ public:
 
 	afx_msg void OnBnClickedButton3();
 	CString m_db_Name;
+	afx_msg void OnClose();
 };

@@ -16,6 +16,8 @@ CMySql::CMySql()
 
 CMySql::~CMySql()
 {
+	m_db_namelist.clear();
+	mysql_close(m_mysql);
 }
 
 bool CMySql::Initialize()
@@ -29,7 +31,7 @@ bool CMySql::Connect()
 	bool res =   (mysql_real_connect(m_mysql, m_ip.c_str(), m_username.c_str(), m_pass.c_str(), "", m_port, NULL, 0) != NULL);
 //	if (mysqlConnected != NULL)
 	bConnected = res;
-	mysqlConnected(this,res);
+	//mysqlConnected(this,res);
 	return res;
 
 }
@@ -52,6 +54,7 @@ void CMySql::getdbs_name()
 				m_db_namelist.push_back(name);
 			}
 		}
+		mysql_free_result(res);
 		mysql_get_DBNames(this);
 	}
 }
@@ -155,4 +158,38 @@ const char * CMySql::getDBName(int index)
 	return it->c_str();
 
 }
+
+bool CMySql::selectDB(char * dbname)
+{
+	//mysql_select_db 返回0 代表成功 否则代表失败
+	return mysql_select_db(m_mysql, dbname) == 0; 
+}
+
+bool CMySql::getTableName()
+{
+	if (m_mysql)
+	{
+		//m_db_namelist.clear();
+		char * dbname = NULL;
+		MYSQL_RES * res = mysql_list_tables(m_mysql, dbname);
+		MYSQL_ROW  row;
+		ULONG colLen = mysql_num_fields(res);
+
+		while (row = mysql_fetch_row(res)) // 遍历每行记录
+		{
+			for (ULONG i = 0; i < colLen; i++)
+			{
+				string name = row[i] ? row[i] : "NULL";
+				m_db_namelist.push_back(name);
+			}
+		}
+		mysql_free_result(res);
+		mysql_get_DBNames(this);
+	}
+	return true;
+}
+
+
+
+
 

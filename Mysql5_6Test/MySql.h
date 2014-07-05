@@ -38,6 +38,9 @@ public:
 	int getDBCount(){ return m_db_namelist.size(); };
 	const char * getDBName(int index);
 
+	bool selectDB(char * dbname);
+	bool getTableName();
+
 	//*************
 	//事件挂接机制
 	void SetMysqlConnectedEvent(const OnMysqlEvent& callback);

@@ -74,6 +74,7 @@ BEGIN_MESSAGE_MAP(CMysql5_6TestDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMysql5_6TestDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMysql5_6TestDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMysql5_6TestDlg::OnBnClickedButton3)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -219,14 +220,14 @@ void CMysql5_6TestDlg::OnBnClickedButton1()
 	mysql->setHostIp("127.0.0.1");
 	mysql->setUsername("root");
 	mysql->setPassword("zzw780517..");
-	//mysql->SetMysqlCallback(this);
+//	mysql->SetMysqlCallback(this);
 	mysql->SetMysqlConnectedEvent(std::bind(&CMysql5_6TestDlg::OnMySqlConnected, this, std::placeholders::_1, std::placeholders::_2));
 	mysql->SetMysqlGetDBNameEvent(std::bind(&CMysql5_6TestDlg::OnMysqlGetDBListFinished, this, std::placeholders::_1));
 
-	mysql->Connect();
+    mysql->Connect();
 	mysql->getdbs_name();
 	//std::bind(&CMysql5_6TestDlg::onMysqlConnected, this, std::placeholders::_1);
-	
+	mysql->getTableName();
 
 }
 
@@ -236,8 +237,13 @@ void CMysql5_6TestDlg::OnMysqlGetDBListFinished(CMySql * Mysql)
 	for (int i = 0; i < Mysql->getDBCount(); i++)
 	{
 		const char * p = Mysql->getDBName(i);
+	
 		char name[255];
 		strcpy_s(name, p);
+		if (i == 4)
+
+		if (mysql->selectDB(name))
+			OutputDebugString("select DB success");
 		m_db_list.AddString((LPCTSTR)name);
 	}
 }
@@ -259,4 +265,12 @@ void CMysql5_6TestDlg::OnBnClickedButton3()
 	CString dbname = "";
 	m_db_list.GetText(index, dbname);
 	mysql->DropDataBase((char*)dbname.GetString());
+}
+
+
+void CMysql5_6TestDlg::OnClose()
+{
+	// TODO:  在此添加消息处理程序代码和/或调用默认值
+	delete(mysql);
+	CDialogEx::OnClose();
 }
