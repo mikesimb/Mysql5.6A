@@ -27,6 +27,8 @@ public:
 	//连接数据库以后可以先获取数据库列表
 	void getdbs_name();
 
+	
+
 	//在连接数据库之前需要设置一下数据
 	//setup begin
 	void setUsername(char * name);
@@ -38,13 +40,17 @@ public:
 	int getDBCount(){ return m_db_namelist.size(); };
 	const char * getDBName(int index);
 
+	int getTableCount() { return m_table_namelist.size(); };
+	const char* getTableName(int index);
+
 	bool selectDB(char * dbname);
-	bool getTableName();
+	bool getTableName(char * dbName);
 
 	//*************
 	//事件挂接机制
 	void SetMysqlConnectedEvent(const OnMysqlEvent& callback);
 	void SetMysqlGetDBNameEvent(const OnMysqlEventA& callback);
+	void SetMysqlGetTableNameEvent(const OnMysqlEventA& callback);
 	//*************
 
 
@@ -53,6 +59,7 @@ public:
 
 	//删除数据库
 	bool DropDataBase(char* dbname);
+	
 
 
 private:
@@ -63,12 +70,15 @@ private:
 	int    m_port;
 
 	vector<string> m_db_namelist;
+	vector<string> m_table_namelist;
 
 
 
 	OnMysqlEvent mysqlConnected;
 
 	OnMysqlEventA mysql_get_DBNames;
+
+	OnMysqlEventA mysql_getTableNames;
 
 	bool bConnected;
 

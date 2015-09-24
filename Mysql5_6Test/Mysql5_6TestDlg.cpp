@@ -75,6 +75,8 @@ BEGIN_MESSAGE_MAP(CMysql5_6TestDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CMysql5_6TestDlg::OnBnClickedButton2)
 	ON_BN_CLICKED(IDC_BUTTON3, &CMysql5_6TestDlg::OnBnClickedButton3)
 	ON_WM_CLOSE()
+	ON_LBN_SETFOCUS(IDC_LIST1, &CMysql5_6TestDlg::OnLbnSetfocusList1)
+	ON_LBN_SELCHANGE(IDC_LIST1, &CMysql5_6TestDlg::OnLbnSelchangeList1)
 END_MESSAGE_MAP()
 
 
@@ -219,15 +221,16 @@ void CMysql5_6TestDlg::OnBnClickedButton1()
 	mysql->Initialize();
 	mysql->setHostIp("127.0.0.1");
 	mysql->setUsername("root");
-	mysql->setPassword("zzw780517..");
+	mysql->setPassword("");
 //	mysql->SetMysqlCallback(this);
 	mysql->SetMysqlConnectedEvent(std::bind(&CMysql5_6TestDlg::OnMySqlConnected, this, std::placeholders::_1, std::placeholders::_2));
 	mysql->SetMysqlGetDBNameEvent(std::bind(&CMysql5_6TestDlg::OnMysqlGetDBListFinished, this, std::placeholders::_1));
+	mysql->SetMysqlGetTableNameEvent(std::bind(&CMysql5_6TestDlg::OnMysqlGetTableListFinished, this, std::placeholders::_1));
 
     mysql->Connect();
 	mysql->getdbs_name();
 	//std::bind(&CMysql5_6TestDlg::onMysqlConnected, this, std::placeholders::_1);
-	mysql->getTableName();
+	//mysql->getTableName();
 
 }
 
@@ -263,8 +266,12 @@ void CMysql5_6TestDlg::OnBnClickedButton3()
 	// TODO:  在此添加控件通知处理程序代码
 	int index = m_db_list.GetCurSel();
 	CString dbname = "";
+
 	m_db_list.GetText(index, dbname);
+	m_db_list.ResetContent();
 	mysql->DropDataBase((char*)dbname.GetString());
+	
+	
 }
 
 
@@ -273,4 +280,36 @@ void CMysql5_6TestDlg::OnClose()
 	// TODO:  在此添加消息处理程序代码和/或调用默认值
 	delete(mysql);
 	CDialogEx::OnClose();
+}
+
+void CMysql5_6TestDlg::OnMysqlGetTableListFinished(CMySql * Mysql)
+{
+	OutputDebugString("OnMysqlGetTableListFinished");
+}
+
+
+void CMysql5_6TestDlg::OnLbnSetfocusList1()
+{
+	// TODO: Add your control notification handler code here
+	//OutputDebugString("dbName List is SetForce");
+}
+
+
+void CMysql5_6TestDlg::OnLbnSelchangeList1()
+{
+	// TODO: Add your control notification handler code here
+	OutputDebugString("dbName List is SelChange");
+	int index = m_db_list.GetCurSel();
+	CString dbname = "";
+
+	m_db_list.GetText(index, dbname);
+	mysql->selectDB((char*)dbname.GetString());
+	if (mysql->getTableName((char*)dbname.GetString()))
+	{
+		OutputDebugString("Error::getTableName is Failed~s \n");
+	}
+	
+
+	
+
 }

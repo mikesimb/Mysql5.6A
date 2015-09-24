@@ -39,9 +39,12 @@ public:
 
 	void OnMySqlConnected(CMySql* mysql,bool Connected);
 	void OnMysqlGetDBListFinished(CMySql * Mysql);
+	void OnMysqlGetTableListFinished(CMySql * Mysql);
 	
 
 	afx_msg void OnBnClickedButton3();
 	CString m_db_Name;
 	afx_msg void OnClose();
+	afx_msg void OnLbnSetfocusList1();
+	afx_msg void OnLbnSelchangeList1();
 };
