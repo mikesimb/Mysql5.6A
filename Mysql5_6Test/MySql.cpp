@@ -172,7 +172,7 @@ bool CMySql::selectDB(char * dbname)
 	return mysql_select_db(m_mysql, dbname) == 0; 
 }
 
-bool CMySql::getTableName(char * dbName)
+bool CMySql::getTablesName(char * dbName)
 {
 	 //在这里获取的表名字没有办法知道他是试图还是表，所以需要做表状态检查。
 	//同事可以用SQL语句来实现相关的功能  show tables from dbname
@@ -205,7 +205,7 @@ bool CMySql::getTableName(char * dbName)
 const char* CMySql::getTableName(int index)
 {
 	vector<string>::iterator it;
-	it = m_db_namelist.begin() + index;
+	it = m_table_namelist.begin() + index;
 	return it->c_str();
 }
 

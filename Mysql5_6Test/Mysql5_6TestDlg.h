@@ -47,4 +47,5 @@ public:
 	afx_msg void OnClose();
 	afx_msg void OnLbnSetfocusList1();
 	afx_msg void OnLbnSelchangeList1();
+	CListBox m_Table_list;
 };

@@ -64,6 +64,7 @@ void CMysql5_6TestDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_db_list);
 	DDX_Text(pDX, IDC_EDIT1, m_db_Name);
+	DDX_Control(pDX, IDC_LIST2, m_Table_list);
 }
 
 BEGIN_MESSAGE_MAP(CMysql5_6TestDlg, CDialogEx)
@@ -249,6 +250,7 @@ void CMysql5_6TestDlg::OnMysqlGetDBListFinished(CMySql * Mysql)
 			OutputDebugString("select DB success");
 		m_db_list.AddString((LPCTSTR)name);
 	}
+
 }
 
 
@@ -285,6 +287,12 @@ void CMysql5_6TestDlg::OnClose()
 void CMysql5_6TestDlg::OnMysqlGetTableListFinished(CMySql * Mysql)
 {
 	OutputDebugString("OnMysqlGetTableListFinished");
+	m_Table_list.ResetContent();
+	int ncount = mysql->getTableCount();
+	for (int i = 0; i < ncount; i++)
+	{
+		m_Table_list.AddString((char*)mysql->getTableName(i));
+	}
 }
 
 
@@ -304,9 +312,9 @@ void CMysql5_6TestDlg::OnLbnSelchangeList1()
 
 	m_db_list.GetText(index, dbname);
 	mysql->selectDB((char*)dbname.GetString());
-	if (mysql->getTableName((char*)dbname.GetString()))
+	if (mysql->getTablesName((char*)dbname.GetString()))
 	{
-		OutputDebugString("Error::getTableName is Failed~s \n");
+		OutputDebugString(" GetTablesName is true");
 	}
 	
 

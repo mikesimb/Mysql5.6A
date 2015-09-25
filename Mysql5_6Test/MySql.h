@@ -44,7 +44,7 @@ public:
 	const char* getTableName(int index);
 
 	bool selectDB(char * dbname);
-	bool getTableName(char * dbName);
+	bool getTablesName(char * dbName);
 
 	//*************
 	//事件挂接机制
